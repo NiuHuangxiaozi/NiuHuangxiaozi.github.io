@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  <link rel="icon" href="/images/logo.webp">
+  
+  <title>计算机网络-多媒体网络 | 蓝鲸食客</title>
+  <meta name="author" content="xiaohuangniu" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="" />
+  
+  <meta name="description" content="[TOC] 1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？为了抵抗网络的时延和抖动，我们需要客户端设置一个缓存，将流视频的一部分首先先下载下来，缓冲一部分就播放，之后就是边缓冲边播放，我们需要保证缓冲速度要大于播放速率。 2、为什么现在好多流媒体不用UDP了？答：因为UDP不做拥塞控制，如果有很多人都同时看流视频，出现拥塞谁都不会做出让步，导致拥塞越来越严重，每个人都看不了了；其二是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络-多媒体网络">
+<meta property="og:url" content="http://example.com/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/index.html">
+<meta property="og:site_name" content="蓝鲸食客">
+<meta property="og:description" content="[TOC] 1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？为了抵抗网络的时延和抖动，我们需要客户端设置一个缓存，将流视频的一部分首先先下载下来，缓冲一部分就播放，之后就是边缓冲边播放，我们需要保证缓冲速度要大于播放速率。 2、为什么现在好多流媒体不用UDP了？答：因为UDP不做拥塞控制，如果有很多人都同时看流视频，出现拥塞谁都不会做出让步，导致拥塞越来越严重，每个人都看不了了；其二是">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/logo.webp">
+<meta property="article:published_time" content="2022-07-26T02:48:05.790Z">
+<meta property="article:modified_time" content="2022-07-26T03:19:31.174Z">
+<meta property="article:author" content="xiaohuangniu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/logo.webp">
+  
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+      .kratos-cover.kratos-cover-2 {
+        background-image: url('/images/banner.webp');
+      }
+    
+    
+      @media(min-width:768px) {
+        body.custom-background {
+          background-image: url('/images/bg.webp');
+        }
+      }
+    
+  </style>
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">蓝鲸食客</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>蓝鲸食客</h2> <br />
+                        <span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">计算机网络-多媒体网络</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2022-07-26T02:48:05.790Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2022-07-26</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">xiaohuangniu</span>
+                </li>
+                <li>
+                    <i class="fa fa-edit"></i> 
+                    
+                    
+                        ~4.12K
+                    
+                    字
+                </li>
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1658805571174"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            
+            <hr />
+            <div itemprop="articleBody"><p>[TOC]</p>
+<h2 id="1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？"><a href="#1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？" class="headerlink" title="1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？"></a>1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？</h2><p>为了抵抗网络的时延和抖动，我们需要客户端设置一个缓存，将流视频的一部分首先先下载下来，缓冲一部分就播放，之后就是边缓冲边播放，我们需要保证缓冲速度要大于播放速率。</p>
+<h2 id="2、为什么现在好多流媒体不用UDP了？"><a href="#2、为什么现在好多流媒体不用UDP了？" class="headerlink" title="2、为什么现在好多流媒体不用UDP了？"></a>2、为什么现在好多流媒体不用UDP了？</h2><p>答：因为UDP不做拥塞控制，如果有很多人都同时看流视频，出现拥塞谁都不会做出让步，导致拥塞越来越严重，每个人都看不了了；其二是因为好多防火墙都禁止了UDP数据包的通过。</p>
+<h2 id="3、DASH有什么好处？怎么做的？（Dynamic-Adaptive-Streaming-Http）"><a href="#3、DASH有什么好处？怎么做的？（Dynamic-Adaptive-Streaming-Http）" class="headerlink" title="3、DASH有什么好处？怎么做的？（Dynamic  Adaptive Streaming Http）"></a>3、DASH有什么好处？怎么做的？（Dynamic  Adaptive Streaming Http）</h2><p>答：</p>
+<p>1、DASH可以允许用户根据自己的网络环境来决定视频的质量，从而保证视频的流畅性；</p>
+<p>2、同时因为DASH会让用户根据网络调整接受速率，所以对于网络也是有好的，减轻了网络的负担；</p>
+<p>服务器端会把视频切成一份一份的，保证流式传输；同时每一份都有不同的版本，有的编码率高，有的编码率低，客户可以按需索取资源。</p>
+<p>3、需要RTSP这样的流媒体控制器来监控用户情况，比如视频是否被暂停。</p>
+<h2 id="4、采用Http传输流视频的实例中，说明为什么客户端缓存能限制服务器的发送速率？"><a href="#4、采用Http传输流视频的实例中，说明为什么客户端缓存能限制服务器的发送速率？" class="headerlink" title="4、采用Http传输流视频的实例中，说明为什么客户端缓存能限制服务器的发送速率？"></a>4、采用Http传输流视频的实例中，说明为什么客户端缓存能限制服务器的发送速率？</h2><p>答：因为当客户端应用缓存以及TCP缓存都已经满了以后，就会反向对服务器进行施压，让服务器不要再发送数据了；一般来说服务器的发送速率肯定比视频的播放速率要快，如果这时视频以v的速率进行播放，那么这就会迫使服务器不能以更大的速率进行播放，而是适应服务器的能力，也以v的速率进行发送。</p>
+<h2 id="5、Skype应用中是如何解决内网穿透问题的？"><a href="#5、Skype应用中是如何解决内网穿透问题的？" class="headerlink" title="5、Skype应用中是如何解决内网穿透问题的？"></a>5、Skype应用中是如何解决内网穿透问题的？</h2><p>答：使用了超级节点，因为两方都不能接受对方发来的连接报文。所以需要超级节点的帮助。</p>
+<p>假设A要和B通讯，A先与A的超级节点建立了链接，然后A的超级节点就去找B在哪里，B的超级结点在哪里。当B的超级结点收到A的通知后，就告知BA的连接来了，B同意之后。</p>
+<p>A与B同时与第三方中继超级结点建立链接（第三方是由A和B的超级结点指定的），之后，A和B之间的通信就全靠第三方来进行转发。</p>
+<h1 id="RTP-x2F-RTCP-x2F-RTSP"><a href="#RTP-x2F-RTCP-x2F-RTSP" class="headerlink" title="RTP&#x2F;RTCP&#x2F;RTSP"></a>RTP&#x2F;RTCP&#x2F;RTSP</h1><h2 id="6、RTP是实时传输协议，运行在什么运输层协议上？"><a href="#6、RTP是实时传输协议，运行在什么运输层协议上？" class="headerlink" title="6、RTP是实时传输协议，运行在什么运输层协议上？"></a>6、RTP是实时传输协议，运行在什么运输层协议上？</h2><p>答：UDP。</p>
+<h2 id="7、RTP是否提供了数据质量保证？路由器是否可见？"><a href="#7、RTP是否提供了数据质量保证？路由器是否可见？" class="headerlink" title="7、RTP是否提供了数据质量保证？路由器是否可见？"></a>7、RTP是否提供了数据质量保证？路由器是否可见？</h2><p>答：RTP只是做了流媒体数据分块的传输功能的实现，没有提供数据质量保障。因为是应用层协议，所以路由器不可见，只是将其是为普通的UDP。</p>
+<h2 id="8、RTP提供了时间戳有什么用？"><a href="#8、RTP提供了时间戳有什么用？" class="headerlink" title="8、RTP提供了时间戳有什么用？"></a>8、RTP提供了时间戳有什么用？</h2><p>答：时间戳重构原始的数据，而且可以定位当时的时间点。</p>
+<h2 id="9、RTP报文格式的解释。"><a href="#9、RTP报文格式的解释。" class="headerlink" title="9、RTP报文格式的解释。"></a>9、RTP报文格式的解释。</h2><p>答：</p>
+<p><img src="/../Internet/Internet_multimedia/rtp_formula.png" alt="image"></p>
+<p>payload type：表示该视频段的编码方式；</p>
+<p>sequence number：序列号，是为了防止重放攻击和重排攻击。</p>
+<p>time stamping:重构原始的视频，还可以定位当时的时间点。</p>
+<p>SSRC：每一个RTP流都有一个流标签。</p>
+<h2 id="10、RTCP的作用，为什么需要RTCP？"><a href="#10、RTCP的作用，为什么需要RTCP？" class="headerlink" title="10、RTCP的作用，为什么需要RTCP？"></a>10、RTCP的作用，为什么需要RTCP？</h2><p><img src="/../Internet/Internet_multimedia/rtcp.png" alt="image-20220609093049585"></p>
+<p>答：十分类似于ICMP，就是监视RTP流的控制报文。</p>
+<p>接收方会发RTCP报文：发送了多少数据包，有多少包丢了等等，是否发生了抖动</p>
+<p>发送方会发RTCP报文：发送的数据量等等；</p>
+<p>RTCP：是为了让原本不具有网络质量保证的RTP具有网络质量保障的协议，通过丢包率、传输的数据量来及时调整发送方发送数据块的速率。</p>
+<h2 id="11、RTSP（real-Time-Streaming-Protocol）的作用？网页播放流视频的过程。"><a href="#11、RTSP（real-Time-Streaming-Protocol）的作用？网页播放流视频的过程。" class="headerlink" title="11、RTSP（real Time Streaming Protocol）的作用？网页播放流视频的过程。"></a>11、RTSP（real Time Streaming Protocol）的作用？网页播放流视频的过程。</h2><p>答：用户并不是什么时候都是从头看到尾有时候需要快进，后退。这时候RTP就需要传输以前或者之后的数据块。所以我们就需要一个协议来做到之间的信息交流。有play、teardonwn、pause这些选项。</p>
+<p><img src="/../Internet/Internet_multimedia/rtsp.png" alt="image-20220609094819098"></p>
+<p>下图是一个网页播放流媒体的例子。</p>
+<p>1、web通过http协议拿到了对应视频在哪里的一个信息文件，叫meta file。</p>
+<p>2、将meta file交给媒体播放器，然后媒体播放器与流服务器建立RTSP链接和RTP链接，之后就可以随便看视频了。</p>
+<h1 id="SIP（Session-Initiation-Protocol）"><a href="#SIP（Session-Initiation-Protocol）" class="headerlink" title="SIP（Session Initiation Protocol）"></a>SIP（Session Initiation Protocol）</h1><h2 id="UDP-x2F-TCP都可以"><a href="#UDP-x2F-TCP都可以" class="headerlink" title="UDP&#x2F;TCP都可以"></a>UDP&#x2F;TCP都可以</h2><h2 id="1、SIP协议是做什么的？"><a href="#1、SIP协议是做什么的？" class="headerlink" title="1、SIP协议是做什么的？"></a>1、SIP协议是做什么的？</h2><p>答：它是一个IP语音会话控制协议。主要是为了建立一个会话链接，为后续的语音信息的交换做好铺垫。这个协议会帮你找到对方URL对应的IP是多少，然后为以后得RTP直接对话做好准备，同时也会协商两者之间得音频传输格式。就是比如说ALice向Bob发送INVITE报文说明自己选择得编码格式，如果Bob同意，那么就会回答“200 OK”，如果Bob不同意这个格式得传输，那么就传输“606 not Accepted”。</p>
+<p>现在主要用于流媒体分发和视频会议。</p>
+<h2 id="2、SIP是怎么将对方用户得邮箱或者URL转化为对方得的IP？"><a href="#2、SIP是怎么将对方用户得邮箱或者URL转化为对方得的IP？" class="headerlink" title="2、SIP是怎么将对方用户得邮箱或者URL转化为对方得的IP？"></a>2、SIP是怎么将对方用户得邮箱或者URL转化为对方得的IP？</h2><p>答：转化过程与DNS极其相似。</p>
+<p>分为三个路由器：注册服务器、重定向服务器和代理服务器。</p>
+<p><img src="/../Internet/Internet_multimedia/sip.png" alt="image-20220609151519325"></p>
+<p>最终获得了对方的IP，然后使用RTP来发送语音。</p>
+<h1 id="Qos"><a href="#Qos" class="headerlink" title="Qos"></a>Qos</h1><h1 id="表征服务质量的四大特征："><a href="#表征服务质量的四大特征：" class="headerlink" title="表征服务质量的四大特征："></a>表征服务质量的四大特征：</h1><p><img src="/../Internet/Internet_multimedia/fourcharacter.png" alt="image-20220612213024675"></p>
+<h2 id="1、为什么需要网络质量服务？"><a href="#1、为什么需要网络质量服务？" class="headerlink" title="1、为什么需要网络质量服务？"></a>1、为什么需要网络质量服务？</h2><p>原本的TCP&#x2F;IP是没有网络质量保障的，我每一次的传输，报文究竟什么时候到达我是没法估计的，在这种情况下，电子邮件的要求就比较低，因为TCP已经能够保障完整、正常交互，邮件晚一点到没有什么大影响。总而言之就是best effor ，尽力而为的服务。</p>
+<p>但是比如，实时语音视频的时延是不能太大的，语音聊天延迟几秒你就不想说话了。还有如果你想要享受高码率的视频，那你就得要越大的带宽，带宽不够，那你就看流畅吧。</p>
+<p>所以网络质量对有些应用是会产生影响的，主要是：实时性、时延、抖动和带宽要求。</p>
+<h2 id="2、网络质量服务的两种方式："><a href="#2、网络质量服务的两种方式：" class="headerlink" title="2、网络质量服务的两种方式："></a>2、网络质量服务的两种方式：</h2><p>1、ISA：(Integrated  Services Architecture)综合服务体系，资源预留方式，跟虚电路一样。</p>
+<p>2、DS（Differenated Services)区分服务。</p>
+<h2 id="3、ISA的设计原理和思想。"><a href="#3、ISA的设计原理和思想。" class="headerlink" title="3、ISA的设计原理和思想。"></a>3、ISA的设计原理和思想。</h2><p><img src="/../Internet/Internet_multimedia/isa.png" alt="image-20220609192350968"></p>
+<p>Routing Protocol：路由的协议不再是只考虑时延，而是我们要考虑流的优先级。</p>
+<p>Classifier Route Selection:因为每一个报文都有一个流标签，路由器会看一些流标签，如果是优先传输的，那么就放入QoS优先级队列里面优先传输；如果发现这个流没有优先级，那么就放入普通的队列（best-effort queuing），尽力而为的传输。</p>
+<p>这个优先级队列基本上是：WFQ也就是带权公平队列。</p>
+<p>Reservation Protocol：预留协议，就是在综合服务体系里面，我们要实现一个虚电路模式的资源预留模式，就是发送方会发一个控制报文（也就是一个不携带数据的信令），对每一个沿途的路由器，都问一下能否预留这么多资源。如果所有的沿途路由器全部都同意了，那么我们就能进行传输；只要有一个路由器不同意那么链接就建立不起来。</p>
+<p>Admisstion Protocol：允许协议，就是路由器来回答是否有足够的资源。</p>
+<p>Traffic Control Database：调度的参数，比如我们的优先级是动态的，所以我们可以改变参数来决定目前谁的优先级最高；</p>
+<p>Mangaement  Agent:就是用来调上面数据库的参数的；</p>
+<h2 id="4、ISA的缺陷。"><a href="#4、ISA的缺陷。" class="headerlink" title="4、ISA的缺陷。"></a>4、ISA的缺陷。</h2><p>1、高代价：首先要改变鲜有所有1路由器的架构，升级改造难，成本大；而且网络中的流是非常多的，所以为每一个流维护一个软状态在路由器里面几乎是不可能的，负担太重了；</p>
+<p>2、只要有一个路由器不支持，那么就变成了尽力而为的服务；</p>
+<p>3、定义的优先级比较少，灵活性不够；</p>
+<h1 id="DS"><a href="#DS" class="headerlink" title="DS:"></a>DS:</h1><h2 id="1、DS的基本理念。"><a href="#1、DS的基本理念。" class="headerlink" title="1、DS的基本理念。"></a>1、DS的基本理念。</h2><p>答：我们可以将数据报分为不同的类别，比如：有些是流视频，有些不是。就是分类比较简单，减轻了路由器的处理负担，在互联网的网络核心路由器轻松，但是在边缘路由器比较麻烦，因为必须为每个进入互联网的报文加上标签。</p>
+<h2 id="2、DS的特征"><a href="#2、DS的特征" class="headerlink" title="2、DS的特征"></a>2、DS的特征</h2><p>答：可以利用IPv4的Type of Service 和IPv6的Traffic Type；</p>
+<p>用户和ISP可以鉴定一个协议，就是一个用户就是一个类型，只要是这个用户传来的报文，我们就为其提供网络质量保障，边缘路由器就在上面那两个地方填上相应的标签，这就完成了分类。</p>
+<h2 id="3、DS-Domain"><a href="#3、DS-Domain" class="headerlink" title="3、DS Domain"></a>3、DS Domain</h2><p>答：每一个ISP或者是一组ISP都组成了一个DSmain，在区域之内进行区分服务；在边界处进行标记。</p>
+<h2 id="4、边缘路由器的整型是怎么做的。"><a href="#4、边缘路由器的整型是怎么做的。" class="headerlink" title="4、边缘路由器的整型是怎么做的。"></a>4、边缘路由器的整型是怎么做的。</h2><p>答：根据用户和ISP签订的协议，我们要对用户的流量进行限制，这个是在边缘路由器做的。</p>
+<h2 id="5、两种整型方法。"><a href="#5、两种整型方法。" class="headerlink" title="5、两种整型方法。"></a>5、两种整型方法。</h2><p>Leaky Bucket:进来的流可以忽快忽慢，但是出去的流被严格限制速率。就像下图所示</p>
+<p><img src="/../Internet/Internet_multimedia/bucket.png" alt="image-20220609202027545"></p>
+<p>Token Bucket:有时候我们并不希望或者我们并不要求出去的速率是恒定不变的，我们只需要做到最高峰值不要超过多少就好了。</p>
+<p>一句话：漏斗中有多少令牌就发多少报文。</p>
+<p><img src="/../Internet/Internet_multimedia/token.png" alt="image-20220609202338800"></p>
+<p>r决定平均速率，b决定峰值速率。</p>
+<h2 id="6、带权公平队列以及带权公平队列我们可以控制最大时延。"><a href="#6、带权公平队列以及带权公平队列我们可以控制最大时延。" class="headerlink" title="6、带权公平队列以及带权公平队列我们可以控制最大时延。"></a>6、带权公平队列以及带权公平队列我们可以控制最大时延。</h2><p><img src="/../Internet/Internet_multimedia/wfqbandwidth" alt="image-20220609203012114"></p>
+<p>通过令牌桶的使用和带权公平队列我们可以控制最大时延：</p>
+<p><img src="/../Internet/Internet_multimedia/wfq.png" alt="image-20220609203027084"></p>
+<h2 id="7、边缘路由器的那些事"><a href="#7、边缘路由器的那些事" class="headerlink" title="7、边缘路由器的那些事"></a>7、边缘路由器的那些事</h2><p><img src="/../Internet/Internet_multimedia/borderrouter1.png" alt="image-20220609203517450"></p>
+<p><img src="/../Internet/Internet_multimedia/borderrouter2.png" alt="image-20220609210139605"></p>
+<p>测定器监视者用户发过来的分组速率是否与协商配置文件一致，如果用户敢私自多发报文，我们就会检测到，然后无情的丢弃。</p>
+<h2 id="8、PHB每跳行为的解释"><a href="#8、PHB每跳行为的解释" class="headerlink" title="8、PHB每跳行为的解释"></a>8、PHB每跳行为的解释</h2><p>答：位于核心的路由器，不会管这个报文从哪来，它们眼里只有标签，有什么样的标签就有什么样的的服务。就像现实生活中一样，有什么样的特权就有什么样的待遇。</p>
+<h2 id="9、DS为什么有时候没有其效果，就是一个用户付了钱，但是传输的带宽居然与没交钱的一样？"><a href="#9、DS为什么有时候没有其效果，就是一个用户付了钱，但是传输的带宽居然与没交钱的一样？" class="headerlink" title="9、DS为什么有时候没有其效果，就是一个用户付了钱，但是传输的带宽居然与没交钱的一样？"></a>9、DS为什么有时候没有其效果，就是一个用户付了钱，但是传输的带宽居然与没交钱的一样？</h2><p>1、因为大多数情况下，一个ISP一个网络质量服务，如果你签约的ISP没有与其他ISP签约或者合作，那么你的报文虽然在这个ISP里面是快的，但是在下一个你所经过的ISP，你却被无情的抛弃了；</p>
+<p>2、网络没有那么拥堵的情况下，时延主要取决于路由器跳数和传输速率，这时候与路由器的排队时延基本没有什么关系，你就哭死了。</p>
+<p>补充：</p>
+<p>在DS协议中有一个极其重要的协议就是SLA（Service Level Agreement)：就是ISP与用户前一个合同，这个合同里面有一个协议，协议上写了ISP提供给用户的网络服务质量，比如带宽等等。</p>
+</div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "http://example.com/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "http://example.com/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/";
+            const title         = "「计算机网络-多媒体网络」";
+            const excerpt       = `[TOC]
+1、在流媒体，尤其是流视频中，我们怎么对抗网络的时延和抖动？为了抵抗网络的时延和抖动，我们需要客户端设置一个缓存，将流视频的一部分首先先下载下来，缓冲一部分就播放，之后就是边缓冲边播放，我们需要保证缓冲速度要大于播放速率。...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    
+                </div>
+                <div class="pull-date">
+                    <time datetime="2022-07-26T03:19:31.174Z" itemprop="dateModified">最后编辑：2022-07-26</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" 编译原理（笔记一）" href="/2022/07/26/编译原理（笔记一)/">&lt; 上一篇</a>
+            </div>
+            
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/toulogo.webp" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center">少年与爱永不老去！</p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                3
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                0
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                
+
+            
+                
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/"><i class="fa  fa-book"></i> 计算机网络-多媒体网络</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/07/26/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/"><i class="fa  fa-book"></i> 编译原理（笔记一）</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/2022/07/25/hello-world/"><i class="fa  fa-book"></i> Hello World</a>
+            
+          
+        
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  class="ap-lrc"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        
+                        
+                        <li><a target="_blank" rel="nofollow" href="https://t.me/CandyUnion"><i class="fa fa-telegram"></i></a></li>
+                        
+                        
+                        
+                        <li><a target="_blank" rel="me" href="https://nya.one/@Candinya"><i class="fa fa fa-share-alt-square"></i></a></li>
+                        <li><a target="_blank" rel="nofollow" href="https://github.com/Candinya"><i class="fa fa-github"></i></a></li>
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2022 蓝鲸食客 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by xiaohuangniu.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+    <div>
+        <canvas id="snow"></canvas>
+        <script async src="/js/snow.min.js"></script>
+    </div>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <meting-js
+        server="netease"
+        type="playlist"
+        id="3204190542"
+        order="random"
+        fixed="true"
+    >
+    </meting-js>
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/vendors/clipboard@2.0.6/dist/clipboard.min.js"></script>
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    </body>
+</html>
