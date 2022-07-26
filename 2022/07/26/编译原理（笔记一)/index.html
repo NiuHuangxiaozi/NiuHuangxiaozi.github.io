@@ -25,7 +25,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/logo.webp">
 <meta property="article:published_time" content="2022-07-25T23:56:13.880Z">
-<meta property="article:modified_time" content="2022-07-26T00:42:12.605Z">
+<meta property="article:modified_time" content="2022-07-26T23:58:11.540Z">
 <meta property="article:author" content="xiaohuangniu">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/logo.webp">
@@ -149,7 +149,7 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        394
+                        1062
                     
                     字
                 </li>
@@ -160,7 +160,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1658796132605"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1658879891540"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -174,7 +174,33 @@
 <p>那么我们就可以这么计算地址，在程序执行之前，我们先把C和A准备好，用户输入i,再算可变部分。编译器准备了下面两个表：</p>
 <p><img src="/../compilerpicture/symbolpicture.png" alt="symbolpicture"></p>
 <p><img src="/../compilerpicture/%E4%BF%A1%E6%81%AF%E5%90%91%E9%87%8F%E8%A1%A8.png" alt="信息向量表"></p>
-<p>2、上下文无关算法。</p>
+<h2 id="2、上下文无关算法。"><a href="#2、上下文无关算法。" class="headerlink" title="2、上下文无关算法。"></a>2、上下文无关算法。</h2><p>（1）为什么叫做上下文无关文法。</p>
+<p>就是指这个文法在推导的过程中，没有上下文的限制，这里推导的过程是不管语义的。</p>
+<p>在网上知乎找了下面的简单理解：</p>
+<p>Sent -&gt; S V O</p>
+<p>S -&gt; 人 | 天</p>
+<p>V -&gt; 吃 | 下</p>
+<p>O -&gt; 雨 | 雪 | 饭 | 肉</p>
+<p>在-&gt;的左边都是非终结符，-&gt;代表的是替换关系，-&gt;右边是非终结符或者是终结符。</p>
+<p>例如以下的推导过程：</p>
+<p>Sent -&gt; SVO -&gt; 天VO -&gt; 天吃O -&gt; 天吃肉（显然这样语义上是讲不通的，所以是不管语义的）</p>
+<p>（2）什么叫做上下文有关文法。看下面的定义：</p>
+<p>Sent -&gt; S V O</p>
+<p>S -&gt; 人 | 天</p>
+<p>人V -&gt; 人吃</p>
+<p>天V -&gt; 天下</p>
+<p>下O -&gt; 下雨 | 下雪</p>
+<p>吃O -&gt; 吃饭 | 吃肉</p>
+<p>我们有以下的推导过程：</p>
+<p>Sent -&gt; S V O-&gt;人VO-&gt;人吃O-&gt;人吃饭</p>
+<p>显然，对于同一个V，它怎么推下一个式子，由它的上文决定：是人就退出人吃，是天就直接推出天下。</p>
+<p>人V -&gt; 人吃</p>
+<p>天V -&gt; 天下</p>
+<p>3、用上下文无关法理解语言的定义。</p>
+<p>我们设G是一个文法，S是一个开始符号，S-&gt;a（由开始符号经过0次或者是有限次生成式的转换得到的式子为a），我们称a为一个句型。如果一个句型全部由终结符组成，那么a就叫做一个句子，由所有句子组成的集合是一种语言。</p>
+<p>一个语言的所有句子满足两种条件：</p>
+<p>1、是推导出来的。</p>
+<p>2、由终结符组成。</p>
 </div>
         </div>
         
@@ -265,7 +291,7 @@
                     
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-07-26T00:42:12.605Z" itemprop="dateModified">最后编辑：2022-07-26</time>
+                    <time datetime="2022-07-26T23:58:11.540Z" itemprop="dateModified">最后编辑：2022-07-27</time>
                 </div>
             </div>
         </footer>
@@ -316,7 +342,7 @@
                 文章
             </span>
             <span class="count">
-                3
+                4
             </span>
         </a>
         <a class="meta-item" href="/categories/">
@@ -351,6 +377,9 @@
   <div class="tab-content">
       <ul class="list-group">
         
+        
+          
+          
         
           
           
