@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title></title>
+    <link href="/2022/11/22/Transformor%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E5%AE%9E%E9%AA%8C/"/>
+    <url>/2022/11/22/Transformor%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E5%AE%9E%E9%AA%8C/</url>
+    
+    <content type="html"><![CDATA[<hr><p>title:Transformer模型的理解和实验<br>categories:深度学习</p><hr><hr><h2 id="一、初步理解。"><a href="#一、初步理解。" class="headerlink" title="一、初步理解。"></a>一、初步理解。</h2><p>1、transformer是自然语言处理比较重要的模型。这是一个比较高效的encoder-decoder模型。用于将一段长度不限的语言，生成一个输出或者多个输出。例如下面做的是中英文翻译：</p><p><img src="https://img-blog.csdnimg.cn/2eba63330569421786eb8f9d41d1eb00.png" alt="img"></p><p>我们这篇文章就是为了读懂图片：</p><p><img src="C:\Users\小黄牛\AppData\Roaming\Typora\typora-user-images\image-20221122131029991.png" alt="image-20221122131029991"></p><p>transformer里面的关键有：self-attention, Positional Encoding,Masked Attention Feed Forward</p><p>下面我们就开始理解一下每一个组成部分吧：</p><h2 id="二、各个组成部分"><a href="#二、各个组成部分" class="headerlink" title="二、各个组成部分"></a>二、各个组成部分</h2><h3 id="（1）self-attention"><a href="#（1）self-attention" class="headerlink" title="（1）self-attention"></a>（1）self-attention</h3><p>自注意力机制：就是我们在处理一些语言问题的时候，我们总是要关注上下文是什么，上下文会对你所预测的结果造成影响</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>毛概笔记</title>
     <link href="/2022/10/28/%E6%AF%9B%E6%A6%82%E7%AC%94%E8%AE%B0/"/>
     <url>/2022/10/28/%E6%AF%9B%E6%A6%82%E7%AC%94%E8%AE%B0/</url>
