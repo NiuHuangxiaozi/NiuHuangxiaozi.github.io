@@ -16,24 +16,21 @@
   <meta name="author" content="xiaohuangniu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、数组的广义表示法(我们假设地址是从1开始算）。对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界） 地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln) 根据这个公式，我们进行拆分，">
+    <meta name="description" content="深度学习-CNN手写数字识别1、cnn简介深度卷积神经网络利用了前馈神经网络的强大解释性，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理（笔记一）">
-<meta property="og:url" content="http://example.com/2022/07/26/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/index.html">
+<meta property="og:title" content="蓝鲸食客">
+<meta property="og:url" content="http://example.com/2022/11/23/LeNet%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/index.html">
 <meta property="og:site_name" content="蓝鲸食客">
-<meta property="og:description" content="1、数组的广义表示法(我们假设地址是从1开始算）。对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界） 地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln) 根据这个公式，我们进行拆分，">
+<meta property="og:description" content="深度学习-CNN手写数字识别1、cnn简介深度卷积神经网络利用了前馈神经网络的强大解释性，">
 <meta property="og:locale" content="zh_CH">
-<meta property="og:image" content="http://example.com/compilerpicture/symbolpicture.png">
-<meta property="og:image" content="http://example.com/compilerpicture/%E4%BF%A1%E6%81%AF%E5%90%91%E9%87%8F%E8%A1%A8.png">
-<meta property="article:published_time" content="2022-07-25T23:56:13.880Z">
-<meta property="article:modified_time" content="2022-07-26T23:58:11.540Z">
+<meta property="article:published_time" content="2022-11-23T14:06:16.425Z">
+<meta property="article:modified_time" content="2022-11-23T15:05:17.149Z">
 <meta property="article:author" content="xiaohuangniu">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/compilerpicture/symbolpicture.png">
   
   
   
-  <title>编译原理（笔记一） - 蓝鲸食客</title>
+  <title>蓝鲸食客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +196,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="编译原理（笔记一）"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -210,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-07-26 07:56" pubdate>
-          July 26, 2022 am
+        <time datetime="2022-11-23 22:06" pubdate>
+          November 23, 2022 pm
         </time>
       </span>
     
@@ -222,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          945 vortoj
+          45 vortoj
         
       </span>
     
@@ -233,7 +230,7 @@
         
         
         
-          8 minutoj
+          1 minutoj
         
       </span>
     
@@ -271,46 +268,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">编译原理（笔记一）</h1>
+            <h1 style="display: none"></h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="1、数组的广义表示法-我们假设地址是从1开始算）。"><a href="#1、数组的广义表示法-我们假设地址是从1开始算）。" class="headerlink" title="1、数组的广义表示法(我们假设地址是从1开始算）。"></a>1、数组的广义表示法(我们假设地址是从1开始算）。</h2><p>对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界）</p>
-<p>地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln)</p>
-<p>根据这个公式，我们进行拆分，拆分为可变部分和不可变部分。</p>
-<p>1、可变部分V&#x3D;i1<strong>d2d3d…dn+i2</strong>d3d4+…+dn+(in-1)dn+in。</p>
-<p>2、不可变部分：C&#x3D;low1d2d3…dn+low2d3d4…dn+(low n-1dn)+low n。</p>
-<p>那么我们就可以这么计算地址，在程序执行之前，我们先把C和A准备好，用户输入i,再算可变部分。编译器准备了下面两个表：</p>
-<p><img src="/../compilerpicture/symbolpicture.png" srcset="/img/loading.gif" lazyload alt="symbolpicture"></p>
-<p><img src="/../compilerpicture/%E4%BF%A1%E6%81%AF%E5%90%91%E9%87%8F%E8%A1%A8.png" srcset="/img/loading.gif" lazyload alt="信息向量表"></p>
-<h2 id="2、上下文无关算法。"><a href="#2、上下文无关算法。" class="headerlink" title="2、上下文无关算法。"></a>2、上下文无关算法。</h2><p>（1）为什么叫做上下文无关文法。</p>
-<p>就是指这个文法在推导的过程中，没有上下文的限制，这里推导的过程是不管语义的。</p>
-<p>在网上知乎找了下面的简单理解：</p>
-<p>Sent -&gt; S V O</p>
-<p>S -&gt; 人 | 天</p>
-<p>V -&gt; 吃 | 下</p>
-<p>O -&gt; 雨 | 雪 | 饭 | 肉</p>
-<p>在-&gt;的左边都是非终结符，-&gt;代表的是替换关系，-&gt;右边是非终结符或者是终结符。</p>
-<p>例如以下的推导过程：</p>
-<p>Sent -&gt; SVO -&gt; 天VO -&gt; 天吃O -&gt; 天吃肉（显然这样语义上是讲不通的，所以是不管语义的）</p>
-<p>（2）什么叫做上下文有关文法。看下面的定义：</p>
-<p>Sent -&gt; S V O</p>
-<p>S -&gt; 人 | 天</p>
-<p>人V -&gt; 人吃</p>
-<p>天V -&gt; 天下</p>
-<p>下O -&gt; 下雨 | 下雪</p>
-<p>吃O -&gt; 吃饭 | 吃肉</p>
-<p>我们有以下的推导过程：</p>
-<p>Sent -&gt; S V O-&gt;人VO-&gt;人吃O-&gt;人吃饭</p>
-<p>显然，对于同一个V，它怎么推下一个式子，由它的上文决定：是人就退出人吃，是天就直接推出天下。</p>
-<p>人V -&gt; 人吃</p>
-<p>天V -&gt; 天下</p>
-<p>3、用上下文无关法理解语言的定义。</p>
-<p>我们设G是一个文法，S是一个开始符号，S-&gt;a（由开始符号经过0次或者是有限次生成式的转换得到的式子为a），我们称a为一个句型。如果一个句型全部由终结符组成，那么a就叫做一个句子，由所有句子组成的集合是一种语言。</p>
-<p>一个语言的所有句子满足两种条件：</p>
-<p>1、是推导出来的。</p>
-<p>2、由终结符组成。</p>
+                <h1 id="深度学习-CNN手写数字识别"><a href="#深度学习-CNN手写数字识别" class="headerlink" title="深度学习-CNN手写数字识别"></a>深度学习-CNN手写数字识别</h1><h2 id="1、cnn简介"><a href="#1、cnn简介" class="headerlink" title="1、cnn简介"></a>1、cnn简介</h2><p>深度卷积神经网络利用了前馈神经网络的强大解释性，</p>
 
                 
               </div>
@@ -328,8 +291,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>编译原理（笔记一）</div>
-      <div>http://example.com/2022/07/26/编译原理（笔记一)/</div>
+      <div></div>
+      <div>http://example.com/2022/11/23/LeNet手写数字识别/</div>
     </div>
     <div class="license-meta">
       
@@ -341,7 +304,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Postigita</div>
-          <div>July 26, 2022</div>
+          <div>November 23, 2022</div>
         </div>
       
       
@@ -373,18 +336,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/26/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="计算机网络-多媒体网络">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">计算机网络-多媒体网络</span>
-                        <span class="visible-mobile">Antaŭa afiŝo</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/07/25/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/11/22/Transformor%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E5%AE%9E%E9%AA%8C/" title="Transformer模型的理解和实验">
+                        <span class="hidden-mobile">Transformer模型的理解和实验</span>
                         <span class="visible-mobile">Sekva afiŝo</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
