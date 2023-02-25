@@ -1,0 +1,855 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Niu Creator">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Transformer模型的理解和实验一、初步理解。1、transformer是自然语言处理比较重要的模型。这是一个比较高效的encoder-decoder模型。用于将一段长度不限的语言，生成一个输出或者多个输出。例如中英文翻译。 我们这篇文章就是为了读懂图片：  transformer里面的关键有：self-attention, Positional Encoding,Masked Attent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer模型的理解和实验">
+<meta property="og:url" content="https://niuhuangxiaozi.github.io/Transformor%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%90%86%E8%A7%A3%E5%92%8C%E5%AE%9E%E9%AA%8C/">
+<meta property="og:site_name" content="小黄牛的博客">
+<meta property="og:description" content="Transformer模型的理解和实验一、初步理解。1、transformer是自然语言处理比较重要的模型。这是一个比较高效的encoder-decoder模型。用于将一段长度不限的语言，生成一个输出或者多个输出。例如中英文翻译。 我们这篇文章就是为了读懂图片：  transformer里面的关键有：self-attention, Positional Encoding,Masked Attent">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/model.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/seqtoseq.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic1.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic2.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic3.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic4.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic5.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic6.png">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/pic7.png">
+<meta property="article:published_time" content="2023-02-25T08:59:35.599Z">
+<meta property="article:modified_time" content="2023-02-25T08:59:35.599Z">
+<meta property="article:author" content="Niu Creator">
+<meta property="article:tag" content="self-attention">
+<meta property="article:tag" content="encoder-decoder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://niuhuangxiaozi.github.io/deeplearning/tranformer/model.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Transformer模型的理解和实验 - 小黄牛的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css_file/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"niuhuangxiaozi.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":100,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":null},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Cloud Creator</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/whiteboard/">
+                <i class="iconfont icon-pen"></i>
+                <span>瞎扯</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/OnJava8/">
+                <i class="iconfont icon-book"></i>
+                <span>On Java 8</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/article_bg.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.2)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Transformer模型的理解和实验"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-25 16:59" pubdate>
+          2023年2月25日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          52 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Transformer模型的理解和实验</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Transformer模型的理解和实验"><a href="#Transformer模型的理解和实验" class="headerlink" title="Transformer模型的理解和实验"></a>Transformer模型的理解和实验</h1><h2 id="一、初步理解。"><a href="#一、初步理解。" class="headerlink" title="一、初步理解。"></a>一、初步理解。</h2><p>1、transformer是自然语言处理比较重要的模型。这是一个比较高效的encoder-decoder模型。用于将一段长度不限的语言，生成一个输出或者多个输出。例如中英文翻译。</p>
+<p>我们这篇文章就是为了读懂图片：</p>
+<p><img src="/../deeplearning/tranformer/model.png" srcset="/img/loading.gif" lazyload alt="model"></p>
+<p>transformer里面的关键有：self-attention, Positional Encoding,Masked Attention Feed Forward</p>
+<p>下面我们就开始理解一下每一个组成部分吧：</p>
+<h2 id="二、各个组成部分"><a href="#二、各个组成部分" class="headerlink" title="二、各个组成部分"></a>二、各个组成部分</h2><h3 id="（1）self-attention"><a href="#（1）self-attention" class="headerlink" title="（1）self-attention"></a>（1）self-attention</h3><p>自注意力机制：就是我们在处理一些语言问题的时候，我们总是要关注上下文是什么，上下文会对你所预测的结果造成影响，就比如你在做为完形填空一样。</p>
+<p>首先我们先复习rnn是怎么做的：</p>
+<p><img src="/../deeplearning/tranformer/seqtoseq.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>就是一个将CNN全连接层的改为可以接受时间方面的信息，例如上图中的h1，它不仅能接受当前的输入信息“机”这个字，而且要接受上一个连接层的状态h0，所以为了保存位置（或者说是时间），它将个个全连接层也相互连接起来，但这样会造成两个问题：</p>
+<p>1、并能并行化处理，训练的时间长；</p>
+<p>2、有遗忘性，可能传到最后，最前面信息都被遗忘了；</p>
+<p>为了解决上面的问题，我们提出了下面的self-attention结构：</p>
+<p><img src="/../deeplearning/tranformer/pic1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>比如上面我们输入了四个向量，每一个向量代表一个单词，我们需要做一些机器翻译，情感分类的任务；</p>
+<p>怎么计算两个向量之间的相关性呢？</p>
+<p>我们使用向量之间的内积，当然也有很多的选择，有的人选择内积完之后，再过一遍激活函数，以下我们直接使用内积。</p>
+<p>下面我们说一下某一个向量经过self-attention之后，输出的过程：</p>
+<p><img src="/../deeplearning/tranformer/pic2.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<p>首先每一个self-attention模块都有三个矩阵，这三个举证是Wq,Wk,Wv,我可以分别叫他们主动关注矩阵，被动关注矩阵以及特征提取矩阵，这些矩阵将作用于输入的每一个向量。</p>
+<p>对于a2，乘以Wq,Wk和Wv得到q2，k2,v2三个向量，我们要得到a2向量和其他向量的关系，就用q2点乘以每一个向量的k，这样得到四个相关系数：</p>
+<p>这些相关系数代表着a2向量和其他向量之间的关系强弱，这就是注意力的强弱。</p>
+<p>最终为了得到最终的b2，就显而易见了，就是相关系数对于v线性求和。</p>
+<p>上面所说的是单个向量的形式，下面就是写成了矩阵形式：</p>
+<p><img src="/../deeplearning/tranformer/pic3.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<h3 id="（2）positional-encoding-位置编码"><a href="#（2）positional-encoding-位置编码" class="headerlink" title="（2）positional-encoding(位置编码)"></a>（2）positional-encoding(位置编码)</h3><p>在seqtoseq里面，我们依靠结构的设计保存前面的信息，用时间表示位置但是self-attention是并行化处理每一个向量的，所以我们说，只能用数据表示位置，我们可以断言：既然单词都可以编为独一无二的编码，那么为什么位置不能独一无二表示。</p>
+<p>于是在attention is all you need中采用了sin，cos函数来进行编码，当然这个编码是随意的，也是可以自由设计的，甚至可以被学习出来。</p>
+<p><img src="/../deeplearning/tranformer/pic4.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<p>解释：</p>
+<h3 id="（3）input-embedding"><a href="#（3）input-embedding" class="headerlink" title="（3）input embedding"></a>（3）input embedding</h3><p>就是将每一个单词变为词向量，最简单的就是独热编码，但是效率不高，pytorch有接口可以直接调用。</p>
+<h3 id="（4）ADD和Norm模块。"><a href="#（4）ADD和Norm模块。" class="headerlink" title="（4）ADD和Norm模块。"></a>（4）ADD和Norm模块。</h3><h4 id="残差思想："><a href="#残差思想：" class="headerlink" title="残差思想："></a>残差思想：</h4><p>首先ADD这块利用的就是残差的思想，残差思想。</p>
+<p>数据在浅层训练的时候，是比较容易的，当神经网络的层数加深的时候，深层越不容易获得，理论上我们我们层数不断增加应该学的是最好的，因为层数越深表达能力越强，而且假设学到某一层神经网络达到最佳了，这时候我们剩下的层数也可以通过恒等映射来保证网络的最优性，但是事实中我们的网络会出现退化（不是过拟合）以及梯度消失的问题。</p>
+<p>那么我们就可以顺着恒等映射的方向想，也许神经网络太强大了，以至于最简单的事情都做的没有那么好（就是聪明反被聪明误，有时把问题想难了），那么有下面的式子：</p>
+<center>H(x)=x</center>
+
+
+
+<p>但是神经网络没法直接学H(x),不然层数越深至少不会在测试集上越差。</p>
+<p>于是我们假设一个函数，他不是恒等映射，反正是一个函数，是一个神经网络好学的函数F(x)</p>
+<center>H(x)=F(x)+x</center>
+
+<p>我们来学习F（x），让其尽可能等于0，这样就相当于间接学会了恒等映射。</p>
+<p>（具体的思想可以看一下resnet残差网路）</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/330799439">ResNet（残差网络） - 知乎 (zhihu.com)</a></p>
+<h4 id="Norm正则化的思想："><a href="#Norm正则化的思想：" class="headerlink" title="Norm正则化的思想："></a>Norm正则化的思想：</h4><p>这里使用的是layer Normalization 而不是CNN里面的Batch Normalization绝大部分原因是因为实验证明layer就是好。</p>
+<p>查阅资料我能比较理解的一个原因就是：因为我们在做NLP翻译的时候，每一个单词编码成的词向量都是定长的，所以对于每一个词向量的所有值做正则化都是比较规整的，而如果还是采用batch ，那么，因为每一个句子的长短是不一样的，所以没法恒稳定的正则化。</p>
+<p>下面贴上两张正则化的图：</p>
+<p><img src="/../deeplearning/tranformer/pic5.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<p><img src="/../deeplearning/tranformer/pic6.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<h3 id="（5）Mask-multihead-Attention"><a href="#（5）Mask-multihead-Attention" class="headerlink" title="（5）Mask-multihead Attention"></a>（5）Mask-multihead Attention</h3><p>这个就是在自注意力的具体应用，其实就是注意力的范围发生了变化。</p>
+<p>必须下面的求b2就是只考虑a1和a2：</p>
+<p><img src="/../deeplearning/tranformer/pic7.png" srcset="/img/loading.gif" lazyload alt="image-20221122162024430"></p>
+<p>这也十分容易理解，我们有时候的任务就是根据前面的信息生成后面的信息。</p>
+<p>在transformer模型里面有两种mask：</p>
+<p>1、为了适应任务，做一个mask，将后面的相关系数全部换为负无穷，这样softmax出来的就是0，就可以忽略这个信息；</p>
+<p>2、为了解决句子长短不一致的问题，我们会在句子后面加上padding，但padding是不应该被注意的，所以后面加上的词向量对应的注意力系数应该变为负无穷。</p>
+<h2 id="三、代码理解"><a href="#三、代码理解" class="headerlink" title="三、代码理解"></a>三、代码理解</h2><p>本次代码的理解来自于csdn一位博客，网址为：</p>
+<p>[<a target="_blank" rel="noopener" href="https://ugirc.blog.csdn.net/article/details/120394042">https://ugirc.blog.csdn.net/article/details/120394042</a></p>
+<p>我们将一点一点解答transformer模型：</p>
+<h3 id="（1）数据的处理："><a href="#（1）数据的处理：" class="headerlink" title="（1）数据的处理："></a>（1）数据的处理：</h3><p>首先我们可以通过python的list创建tensor在pytorch上进行训练：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><br><span class="hljs-comment">#下面创建了两个句子，最前面的是编码器的输入，中间是解码器的输入，最后是解码器的输出</span><br>sentences = [<br>    <span class="hljs-comment"># 中文和英语的单词个数不要求相同</span><br>    <span class="hljs-comment"># enc_input                dec_input           dec_output</span><br>    [<span class="hljs-string">&#x27;我 有 一 个 好 朋 友 P&#x27;</span>, <span class="hljs-string">&#x27;S i have a good friend .&#x27;</span>, <span class="hljs-string">&#x27;i have a good friend . E&#x27;</span>],<br>    [<span class="hljs-string">&#x27;我 有 零 个 女 朋 友 P&#x27;</span>, <span class="hljs-string">&#x27;S i have zero girl friend .&#x27;</span>, <span class="hljs-string">&#x27;i have zero girl friend . E&#x27;</span>]<br>]<br><br><span class="hljs-comment"># 测试集（希望transformer能达到的效果）</span><br><span class="hljs-comment"># 输入：&quot;我 有 一 个 女 朋 友&quot;</span><br><span class="hljs-comment"># 输出：&quot;i have a girlfriend&quot;</span><br><br><span class="hljs-comment"># 中文和英语的单词要分开建立词库</span><br><span class="hljs-comment"># Padding Should be Zero</span><br>src_vocab = &#123;<span class="hljs-string">&#x27;P&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;我&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;有&#x27;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;一&#x27;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;个&#x27;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&#x27;好&#x27;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;朋&#x27;</span>: <span class="hljs-number">6</span>, <span class="hljs-string">&#x27;友&#x27;</span>: <span class="hljs-number">7</span>, <span class="hljs-string">&#x27;零&#x27;</span>: <span class="hljs-number">8</span>, <span class="hljs-string">&#x27;女&#x27;</span>: <span class="hljs-number">9</span>&#125;<br>src_idx2word = &#123;i: w <span class="hljs-keyword">for</span> i, w <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(src_vocab)&#125;<br>src_vocab_size = <span class="hljs-built_in">len</span>(src_vocab)<br><br>tgt_vocab = &#123;<span class="hljs-string">&#x27;P&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;i&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;have&#x27;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;a&#x27;</span>: <span class="hljs-number">3</span>, <span class="hljs-string">&#x27;good&#x27;</span>: <span class="hljs-number">4</span>, <span class="hljs-string">&#x27;friend&#x27;</span>: <span class="hljs-number">5</span>, <span class="hljs-string">&#x27;zero&#x27;</span>: <span class="hljs-number">6</span>, <span class="hljs-string">&#x27;girl&#x27;</span>: <span class="hljs-number">7</span>, <span class="hljs-string">&#x27;S&#x27;</span>: <span class="hljs-number">8</span>, <span class="hljs-string">&#x27;E&#x27;</span>: <span class="hljs-number">9</span>, <span class="hljs-string">&#x27;.&#x27;</span>: <span class="hljs-number">10</span>&#125;<br>idx2word = &#123;i: w <span class="hljs-keyword">for</span> i, w <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(tgt_vocab)&#125;<br>tgt_vocab_size = <span class="hljs-built_in">len</span>(tgt_vocab)<br><br><br></code></pre></td></tr></table></figure>
+
+<p>这个阶段就是建立字典，为后面的词向量化做好准备。</p>
+<h3 id="（2）整体的模型构建"><a href="#（2）整体的模型构建" class="headerlink" title="（2）整体的模型构建"></a>（2）整体的模型构建</h3><p>transformer模块是解码器和编码器结构：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Transformer</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(Transformer, self).__init__()<br>        self.encoder = Encoder().to(device)<span class="hljs-comment">#编码器</span><br>        self.decoder = Decoder().to(device)<span class="hljs-comment">#解码器</span><br>        <br>        <span class="hljs-comment">#将词向量的特征映射为最终词典的大小，这样可以预测最终是哪一个词</span><br>        self.projection = nn.Linear(d_model, tgt_vocab_size, bias=<span class="hljs-literal">False</span>).to(device)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, enc_inputs, dec_inputs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Transformers的输入：两个序列</span><br><span class="hljs-string">        enc_inputs: [batch_size, src_len]</span><br><span class="hljs-string">        dec_inputs: [batch_size, tgt_len]</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># tensor to store decoder outputs</span><br>        <span class="hljs-comment"># outputs = torch.zeros(batch_size, tgt_len, tgt_vocab_size).to(self.device)</span><br><br>        <span class="hljs-comment"># enc_outputs: [batch_size, src_len, d_model], enc_self_attns: [n_layers, batch_size, n_heads, src_len, src_len]</span><br>        <br>        <span class="hljs-comment"># 经过Encoder网络后，得到的输出还是[batch_size, src_len, d_model]</span><br>        <br>        enc_outputs, enc_self_attns = self.encoder(enc_inputs)<br>        <br>        <span class="hljs-comment"># dec_outputs: [batch_size, tgt_len, d_model], dec_self_attns: [n_layers, batch_size, n_heads, tgt_len, tgt_len], dec_enc_attn: [n_layers, batch_size, tgt_len, src_len]</span><br>        <br>        dec_outputs, dec_self_attns, dec_enc_attns = self.decoder(dec_inputs, enc_inputs, enc_outputs)<br>        <br>        <span class="hljs-comment"># dec_outputs: [batch_size, tgt_len, d_model] -&gt; dec_logits: [batch_size, tgt_len, tgt_vocab_size]</span><br>        dec_logits = self.projection(dec_outputs)<br><br><br>        <span class="hljs-keyword">return</span> dec_logits.view(-<span class="hljs-number">1</span>, dec_logits.size(-<span class="hljs-number">1</span>)), enc_self_attns, dec_self_attns, dec_enc_attns<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="（3）编码器。"><a href="#（3）编码器。" class="headerlink" title="（3）编码器。"></a>（3）编码器。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Encoder</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(Encoder, self).__init__()<br>        self.src_emb = nn.Embedding(src_vocab_size, d_model)  <span class="hljs-comment"># token Embedding</span><br>        self.pos_emb = PositionalEncoding(d_model)  <span class="hljs-comment"># Transformer中位置编码是固定的，不需要学习</span><br>        self.layers = nn.ModuleList([EncoderLayer() <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n_layers)])<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, enc_inputs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        enc_inputs: [batch_size, src_len]</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        enc_outputs = self.src_emb(enc_inputs)  <span class="hljs-comment"># [batch_size, src_len, d_model]</span><br>        enc_outputs = self.pos_emb(enc_outputs.transpose(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)).transpose(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)  <span class="hljs-comment"># [batch_size, src_len, d_model]</span><br>        <span class="hljs-comment"># Encoder输入序列的pad mask矩阵</span><br>        enc_self_attn_mask = get_attn_pad_mask(enc_inputs, enc_inputs)  <span class="hljs-comment"># [batch_size, src_len, src_len]</span><br>        enc_self_attns = []  <span class="hljs-comment"># 在计算中不需要用到，它主要用来保存你接下来返回的attention的值（这个主要是为了你画热力图等，用来看各个词之间的关系</span><br>        <span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> self.layers:  <span class="hljs-comment"># for循环访问nn.ModuleList对象</span><br>            <span class="hljs-comment"># 上一个block的输出enc_outputs作为当前block的输入</span><br>            <span class="hljs-comment"># enc_outputs: [batch_size, src_len, d_model], enc_self_attn: [batch_size, n_heads, src_len, src_len]</span><br>            enc_outputs, enc_self_attn = layer(enc_outputs,<br>                                               enc_self_attn_mask)  <span class="hljs-comment"># 传入的enc_outputs其实是input，传入mask矩阵是因为你要做self attention</span><br>            enc_self_attns.append(enc_self_attn)  <span class="hljs-comment"># 这个只是为了可视化</span><br>        <span class="hljs-keyword">return</span> enc_outputs, enc_self_attns<br></code></pre></td></tr></table></figure>
+
+<p>1、这一阶段要经过以下的步骤：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">self.src_emb = nn.Embedding(src_vocab_size, d_model)  <span class="hljs-comment"># token Embedding</span><br></code></pre></td></tr></table></figure>
+
+<p>（1）首先数进来的数据进行词向量化，调用nn.Embedding(src_vocab_size, d_model)函数，这个函数的第一个参数是字典的数量，第二个参数是你所期望用多长的向量来表示一个单词。</p>
+<p>最简单的是one-hot编码，但是最大的问题是十分占用内存空间，所以我们要用更短的向量表示更多的词汇。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">self.pos_emb = PositionalEncoding(d_model) <br></code></pre></td></tr></table></figure>
+
+<p>（2）这个是位置向量，因为在transfomer里面，是并行化处理的，所以没有位置的先后信息，所以我们需要对于每一个位置进行独一无二的编码，对于transformer里面的编码方式，可以看这篇文章：</p>
+<p>[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/98641990]">https://zhuanlan.zhihu.com/p/98641990]</a>: </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-chain-item">深度学习</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/self-attention/">#self-attention</a>
+      
+        <a href="/tags/encoder-decoder/">#encoder-decoder</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Transformer模型的理解和实验</div>
+      <div>https://niuhuangxiaozi.github.io/Transformor模型的理解和实验/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Niu Creator</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="NC - 非商业性使用">
+                    <i class="iconfont icon-nc"></i>
+                  </span>
+                </a>
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="SA - 相同方式共享">
+                    <i class="iconfont icon-sa"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/" title="编译原理（笔记一）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">编译原理（笔记一）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/LeNet%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'young-cloud-creator/young-cloud-creator.github.io');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('label', 'Comment');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <font color=gray>Powered by</font> <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <font color=gray>with</font> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js_file/duration.js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        访问人数: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
