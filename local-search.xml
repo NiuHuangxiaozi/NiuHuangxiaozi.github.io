@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>编译原理[词法分析]</title>
+    <link href="/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%5B%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%5D/"/>
+    <url>/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%5B%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%5D/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一、词法分析的基本过程。"><a href="#一、词法分析的基本过程。" class="headerlink" title="一、词法分析的基本过程。"></a>一、词法分析的基本过程。</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>编译原理</category>
+      
+      <category>词法分析</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>NFA</tag>
+      
+      <tag>DFA，正则表达式，最小化DFA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>编译原理（总览）</title>
     <link href="/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/"/>
     <url>/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/</url>
