@@ -18,26 +18,27 @@
   <meta name="author" content="Niu Creator">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1、数组的广义表示法(我们假设地址是从1开始算）。对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界） 地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln) 根据这个公式，我们进行拆分，">
+    <meta name="description" content="一、什么是编译原理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编译原理（笔记一）">
+<meta property="og:title" content="编译原理（总览）">
 <meta property="og:url" content="https://niuhuangxiaozi.github.io/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%88%E7%AC%94%E8%AE%B0%E4%B8%80)/">
 <meta property="og:site_name" content="小黄牛的博客">
-<meta property="og:description" content="1、数组的广义表示法(我们假设地址是从1开始算）。对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界） 地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln) 根据这个公式，我们进行拆分，">
+<meta property="og:description" content="一、什么是编译原理。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://niuhuangxiaozi.github.io/compilerpicture/symbolpicture.png">
-<meta property="og:image" content="https://niuhuangxiaozi.github.io/compilerpicture/%E4%BF%A1%E6%81%AF%E5%90%91%E9%87%8F%E8%A1%A8.png">
-<meta property="article:published_time" content="2023-02-25T08:59:35.608Z">
-<meta property="article:modified_time" content="2023-02-25T08:59:35.608Z">
+<meta property="og:image" content="https://niuhuangxiaozi.github.io/Compilers/summarization/titlepicture.jpg">
+<meta property="article:published_time" content="2023-02-27T02:00:00.000Z">
+<meta property="article:modified_time" content="2023-02-27T02:00:00.000Z">
 <meta property="article:author" content="Niu Creator">
+<meta property="article:tag" content="编译器">
+<meta property="article:tag" content="词法分析，语法分析，">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://niuhuangxiaozi.github.io/compilerpicture/symbolpicture.png">
+<meta name="twitter:image" content="https://niuhuangxiaozi.github.io/Compilers/summarization/titlepicture.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>编译原理（笔记一） - 小黄牛的博客</title>
+  <title>编译原理（总览） - 小黄牛的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +223,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="编译原理（笔记一）"></span>
+            <span id="subtitle" data-typed-text="编译原理（总览）"></span>
           
         </div>
 
@@ -233,8 +234,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-02-25 16:59" pubdate>
-          2023年2月25日 下午
+        <time datetime="2023-02-27 10:00" pubdate>
+          2023年2月27日 上午
         </time>
       </span>
     
@@ -245,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          945 字
+          10 字
         
       </span>
     
@@ -256,7 +257,7 @@
         
         
         
-          8 分钟
+          1 分钟
         
       </span>
     
@@ -302,47 +303,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">编译原理（笔记一）</h1>
+            <h1 style="display: none">编译原理（总览）</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="1、数组的广义表示法-我们假设地址是从1开始算）。"><a href="#1、数组的广义表示法-我们假设地址是从1开始算）。" class="headerlink" title="1、数组的广义表示法(我们假设地址是从1开始算）。"></a>1、数组的广义表示法(我们假设地址是从1开始算）。</h2><p>对于一个n维数组A[ low1: up1,low2 : up2, low3 : up3 , …]  (其中low1表示第一维的下界，up1表示第一维的上界）</p>
-<p>地址解析就是D &#x3D; A + (i1 - l1)d2d3…dn+(i2 -l2)d3d4…dn+…+(in-1 - ln-1)dn + (in - ln)</p>
-<p>根据这个公式，我们进行拆分，拆分为可变部分和不可变部分。</p>
-<p>1、可变部分V&#x3D;i1<strong>d2d3d…dn+i2</strong>d3d4+…+dn+(in-1)dn+in。</p>
-<p>2、不可变部分：C&#x3D;low1d2d3…dn+low2d3d4…dn+(low n-1dn)+low n。</p>
-<p>那么我们就可以这么计算地址，在程序执行之前，我们先把C和A准备好，用户输入i,再算可变部分。编译器准备了下面两个表：</p>
-<p><img src="/../compilerpicture/symbolpicture.png" srcset="/img/loading.gif" lazyload alt="symbolpicture"></p>
-<p><img src="/../compilerpicture/%E4%BF%A1%E6%81%AF%E5%90%91%E9%87%8F%E8%A1%A8.png" srcset="/img/loading.gif" lazyload alt="信息向量表"></p>
-<h2 id="2、上下文无关算法。"><a href="#2、上下文无关算法。" class="headerlink" title="2、上下文无关算法。"></a>2、上下文无关算法。</h2><p>（1）为什么叫做上下文无关文法。</p>
-<p>就是指这个文法在推导的过程中，没有上下文的限制，这里推导的过程是不管语义的。</p>
-<p>在网上知乎找了下面的简单理解：</p>
-<p>Sent -&gt; S V O</p>
-<p>S -&gt; 人 | 天</p>
-<p>V -&gt; 吃 | 下</p>
-<p>O -&gt; 雨 | 雪 | 饭 | 肉</p>
-<p>在-&gt;的左边都是非终结符，-&gt;代表的是替换关系，-&gt;右边是非终结符或者是终结符。</p>
-<p>例如以下的推导过程：</p>
-<p>Sent -&gt; SVO -&gt; 天VO -&gt; 天吃O -&gt; 天吃肉（显然这样语义上是讲不通的，所以是不管语义的）</p>
-<p>（2）什么叫做上下文有关文法。看下面的定义：</p>
-<p>Sent -&gt; S V O</p>
-<p>S -&gt; 人 | 天</p>
-<p>人V -&gt; 人吃</p>
-<p>天V -&gt; 天下</p>
-<p>下O -&gt; 下雨 | 下雪</p>
-<p>吃O -&gt; 吃饭 | 吃肉</p>
-<p>我们有以下的推导过程：</p>
-<p>Sent -&gt; S V O-&gt;人VO-&gt;人吃O-&gt;人吃饭</p>
-<p>显然，对于同一个V，它怎么推下一个式子，由它的上文决定：是人就退出人吃，是天就直接推出天下。</p>
-<p>人V -&gt; 人吃</p>
-<p>天V -&gt; 天下</p>
-<p>3、用上下文无关法理解语言的定义。</p>
-<p>我们设G是一个文法，S是一个开始符号，S-&gt;a（由开始符号经过0次或者是有限次生成式的转换得到的式子为a），我们称a为一个句型。如果一个句型全部由终结符组成，那么a就叫做一个句子，由所有句子组成的集合是一种语言。</p>
-<p>一个语言的所有句子满足两种条件：</p>
-<p>1、是推导出来的。</p>
-<p>2、由终结符组成。</p>
-
+                <h1 id="一、什么是编译原理。"><a href="#一、什么是编译原理。" class="headerlink" title="一、什么是编译原理。"></a>一、什么是编译原理。</h1>
                 
               </div>
             
@@ -350,6 +316,43 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" class="category-chain-item">编译原理</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA/" class="category-chain-item">计算机</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BC%96%E8%AF%91%E5%99%A8/">#编译器</a>
+      
+        <a href="/tags/%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%EF%BC%8C%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%EF%BC%8C/">#词法分析，语法分析，</a>
+      
+    </div>
   
 </div>
 
@@ -359,7 +362,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>编译原理（笔记一）</div>
+      <div>编译原理（总览）</div>
       <div>https://niuhuangxiaozi.github.io/编译原理（笔记一)/</div>
     </div>
     <div class="license-meta">
@@ -372,7 +375,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年2月25日</div>
+          <div>2023年2月27日</div>
         </div>
       
       
@@ -416,18 +419,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="计网-多媒体网络">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">计网-多媒体网络</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/LeNet%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/" title="CNN手写数字识别">
-                        <span class="hidden-mobile">CNN手写数字识别</span>
+                      <a href="/%E5%A4%9A%E5%AA%92%E4%BD%93%E7%BD%91%E7%BB%9C%E6%9C%9F%E6%9C%AB%E5%A4%8D%E4%B9%A0/" title="计网-多媒体网络">
+                        <span class="hidden-mobile">计网-多媒体网络</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
